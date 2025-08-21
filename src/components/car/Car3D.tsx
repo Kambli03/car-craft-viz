@@ -11,11 +11,17 @@ interface Car3DProps {
 
 // Simple car geometry since we don't have a GLTF model
 function CarModel({ color, material }: { color: string; material: string }) {
-  const meshRef = useRef<THREE.Mesh>(null);
+  const carBodyRef = useRef<THREE.Group>(null);
+  const wheelsRef = useRef<THREE.Group>(null);
   
   useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.y += 0.002;
+    if (carBodyRef.current && wheelsRef.current) {
+      // Rotate car body
+      carBodyRef.current.rotation.y += 0.002;
+      // Rotate wheels on their own axis
+      wheelsRef.current.children.forEach((wheel) => {
+        wheel.rotation.x += 0.05; // Wheels rotate faster than car body
+      });
     }
   });
 
@@ -51,9 +57,9 @@ function CarModel({ color, material }: { color: string; material: string }) {
   };
 
   return (
-    <group>
+    <group ref={carBodyRef}>
       {/* Car body */}
-      <mesh ref={meshRef} position={[0, 0, 0]} material={getMaterial()}>
+      <mesh position={[0, 0, 0]} material={getMaterial()}>
         <boxGeometry args={[4, 1.5, 8]} />
       </mesh>
       
@@ -62,23 +68,25 @@ function CarModel({ color, material }: { color: string; material: string }) {
         <boxGeometry args={[3.5, 1, 4]} />
       </mesh>
       
-      {/* Wheels */}
-      <mesh position={[-1.8, -0.8, 2.5]}>
-        <cylinderGeometry args={[0.6, 0.6, 0.3, 16]} />
-        <meshStandardMaterial color="#333333" metalness={0.8} roughness={0.2} />
-      </mesh>
-      <mesh position={[1.8, -0.8, 2.5]}>
-        <cylinderGeometry args={[0.6, 0.6, 0.3, 16]} />
-        <meshStandardMaterial color="#333333" metalness={0.8} roughness={0.2} />
-      </mesh>
-      <mesh position={[-1.8, -0.8, -2.5]}>
-        <cylinderGeometry args={[0.6, 0.6, 0.3, 16]} />
-        <meshStandardMaterial color="#333333" metalness={0.8} roughness={0.2} />
-      </mesh>
-      <mesh position={[1.8, -0.8, -2.5]}>
-        <cylinderGeometry args={[0.6, 0.6, 0.3, 16]} />
-        <meshStandardMaterial color="#333333" metalness={0.8} roughness={0.2} />
-      </mesh>
+      {/* Wheels Group */}
+      <group ref={wheelsRef}>
+        <mesh position={[-1.8, -0.8, 2.5]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.6, 0.6, 0.3, 16]} />
+          <meshStandardMaterial color="#333333" metalness={0.8} roughness={0.2} />
+        </mesh>
+        <mesh position={[1.8, -0.8, 2.5]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.6, 0.6, 0.3, 16]} />
+          <meshStandardMaterial color="#333333" metalness={0.8} roughness={0.2} />
+        </mesh>
+        <mesh position={[-1.8, -0.8, -2.5]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.6, 0.6, 0.3, 16]} />
+          <meshStandardMaterial color="#333333" metalness={0.8} roughness={0.2} />
+        </mesh>
+        <mesh position={[1.8, -0.8, -2.5]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.6, 0.6, 0.3, 16]} />
+          <meshStandardMaterial color="#333333" metalness={0.8} roughness={0.2} />
+        </mesh>
+      </group>
       
       {/* Headlights */}
       <mesh position={[-1.2, 0.2, 4.2]}>
