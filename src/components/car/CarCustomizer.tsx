@@ -68,13 +68,13 @@ export function CarCustomizer() {
       </header>
 
       <div className="flex h-[calc(100vh-80px)]">
-        {/* 3D Viewport - Disabled */}
-        <div className="flex-1 relative bg-muted/20 flex items-center justify-center">
-          <div className="text-center text-muted-foreground">
-            <div className="text-6xl mb-4">🚗</div>
-            <h3 className="text-xl font-semibold mb-2">3D View Disabled</h3>
-            <p className="text-sm">The 3D car visualization has been stopped</p>
-          </div>
+        {/* 3D Viewport */}
+        <div className="flex-1 relative">
+          <Car3D 
+            carColor={carColor}
+            material={material}
+            environmentLighting={environment}
+          />
           
           {/* Floating Controls */}
           <div className="absolute top-6 left-6 z-10">
@@ -90,6 +90,15 @@ export function CarCustomizer() {
                 </div>
                 <div>Material: <span className="font-medium capitalize">{material}</span></div>
                 <div>Environment: <span className="font-medium capitalize">{environment}</span></div>
+              </div>
+            </Card>
+          </div>
+
+          {/* Controls Hint */}
+          <div className="absolute bottom-6 left-6 z-10">
+            <Card className="p-3 bg-card/90 backdrop-blur-lg border-border/50">
+              <div className="text-sm text-muted-foreground">
+                🖱️ Drag to rotate • 🔍 Scroll to zoom
               </div>
             </Card>
           </div>
